@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Göktürk Otağı</title>
+
+<style>
+body {
+    margin:0;
+    font-family:Arial;
+    background:linear-gradient(135deg,#000,#0f2027);
+    color:white;
+    text-align:center;
+}
+
+/* HEADER */
+h1 {
+    color:#00ffd5;
+    text-shadow:0 0 20px #00ffd5;
+}
+
+/* BUTTON */
+button {
+    padding:8px 15px;
+    margin:5px;
+    border:none;
+    border-radius:10px;
+    background:black;
+    color:#00ffd5;
+    border:1px solid #00ffd5;
+    cursor:pointer;
+}
+
+/* PLAYER CARDS (FC STYLE) */
+.players {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+.card {
+    width:180px;
+    margin:15px;
+    padding:15px;
+    border-radius:15px;
+    background:linear-gradient(145deg,#111,#222);
+    border:2px solid gold;
+    box-shadow:0 0 15px gold;
+    position:relative;
+}
+
+.rating {
+    font-size:30px;
+    color:gold;
+}
+
+.remove {
+    position:absolute;
+    top:5px;
+    right:5px;
+    color:red;
+    cursor:pointer;
+}
+
+/* ADMIN PANEL */
+.admin {
+    margin:20px;
+    padding:15px;
+    border:1px solid #00ffd5;
+    border-radius:10px;
+}
+
+input {
+    padding:8px;
+    margin:5px;
+    border-radius:8px;
+    border:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>🐺 GÖKTÜRK OTAĞI</h1>
+
+<!-- 🎵 MÜZİK -->
+<button onclick="playMusic()">🎵 Aç</button>
+<button onclick="pauseMusic()">⏸️ Kapat</button>
+
+<audio id="bgMusic" loop>
+<source src="muzik.mp3">
+</audio>
+
+<!-- 📲 TELEGRAM -->
+<br>
+<a href="https://t.me/fcmobile0012" target="_blank">
+<button>📲 Lige Katıl</button>
+</a>
+
+<!-- 🎮 PLAYER AREA -->
+<div class="players" id="players"></div>
+
+<!-- 🛠️ ADMIN PANEL -->
+<div class="admin">
+<h3>⚙️ Admin Panel</h3>
+
+<input id="name" placeholder="İsim">
+<input id="rating" placeholder="Rating">
+<input id="status" placeholder="online/offline">
+
+<br>
+<button onclick="addPlayer()">Ekle</button>
+
+</div>
+
+<script>
+
+let players = JSON.parse(localStorage.getItem("players")) || [
+    {name:"Hector", rating:100, status:"online"},
+    {name:"AliEmreFC", rating:97, status:"online"}
+];
+
+function save() {
+    localStorage.setItem("players", JSON.stringify(players));
+}
+
+function render() {
+    let area = document.getElementById("players");
+    area.innerHTML = "";
+
+    players.forEach((p,i)=>{
+        area.innerHTML += `
+        <div class="card">
+        <div class="remove" onclick="removePlayer(${i})">✖</div>
+        <div class="rating">${p.rating}</div>
+        <h3>${p.name}</h3>
+        <p>${p.status==="online"?"🟢 Online":"🔴 Offline"}</p>
+        </div>
+        `;
+    });
+}
+
+function addPlayer() {
+    let name = document.getElementById("name").value;
+    let rating = document.getElementById("rating").value;
+    let status = document.getElementById("status").value;
+
+    if(name && rating) {
+        players.push({name,rating,status});
+        save();
+        render();
+    }
+}
+
+function removePlayer(i) {
+    players.splice(i,1);
+    save();
+    render();
+}
+
+/* 🎵 */
+function playMusic() {
+    document.getElementById("bgMusic").play();
+}
+function pauseMusic() {
+    document.getElementById("bgMusic").pause();
+}
+
+render();
+
+</script>
+
+</body>
+  </html>
